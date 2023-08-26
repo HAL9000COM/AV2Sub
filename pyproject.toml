@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "AV2Sub"
+version = "0.1.0"
+description = "Audio/Video to Subtitle converter with translation."
+license="GPL-3.0-or-later"
+authors = ["HAL9000COM <f1226942353@icloud.com>"]
+readme = "README.md"
+repository ="https://github.com/HAL9000COM/AV2Sub"
+
+[tool.poetry.dependencies]
+python = "^3.10,<3.12"
+openai = "^0.27.9"
+ffmpeg-python = "^0.2.0"
+pysrt = "^1.1.2"
+pyside6 = "^6.5.2"
+send2trash = "^1.8.2"
+markdown2 = "^2.4.10"
+
+
+[tool.poetry.group.dev.dependencies]
+notebook = "^7.0.2"
+mypy = "^1.5.1"
+black = "^23.7.0"
+pip-licenses = "^4.3.2"
+licensecheck = "^2023.4.2"
+nuitka = "^1.7.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

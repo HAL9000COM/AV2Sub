@@ -1,0 +1,5 @@
+poetry.lock
+.vscode/
+test_video/
+__pycache__
+av2sub/config.json
