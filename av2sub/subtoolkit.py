@@ -43,7 +43,7 @@ def video2audio(video_path: str, audio_path=None, bitrate="128k"):
 
 
 # %%
-def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None):
+def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None, en=False):
     if srt_path is None:
         srt_path = audio_path.split(".")[0] + ".srt"
     # check audio file size
@@ -56,9 +56,14 @@ def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None):
                 )
             audio_file = open(audio_path, "rb")
             openai.proxy = urllib.request.getproxies()["https"]
-            transcript = openai.Audio.transcribe(
-                "whisper-1", audio_file, response_format="srt"
-            )
+            if en:
+                transcript = openai.Audio.translate(
+                    "whisper-1", audio_file, response_format="srt"
+                )
+            else:
+                transcript = openai.Audio.transcribe(
+                    "whisper-1", audio_file, response_format="srt"
+                )
             with open(srt_path, "w", encoding="utf-8") as f:
                 f.write(transcript)  # type: ignore
         case _:

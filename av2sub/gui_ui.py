@@ -184,6 +184,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.lineEdit_transcribe_key)
 
+        self.checkBox_transcribe_en = QCheckBox(self.groupBox)
+        self.checkBox_transcribe_en.setObjectName(u"checkBox_transcribe_en")
+
+        self.horizontalLayout_6.addWidget(self.checkBox_transcribe_en)
+
 
         self.verticalLayout.addLayout(self.horizontalLayout_6)
 
@@ -283,6 +288,7 @@ class Ui_MainWindow(object):
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Transcribe API", None))
         self.comboBox_transcribe.setItemText(0, QCoreApplication.translate("MainWindow", u"OpenAI", None))
 
+        self.checkBox_transcribe_en.setText(QCoreApplication.translate("MainWindow", u"English Output", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Translate API:", None))
         self.comboBox_translate.setItemText(0, QCoreApplication.translate("MainWindow", u"DeepL", None))
         self.comboBox_translate.setItemText(1, QCoreApplication.translate("MainWindow", u"Deepl Pro", None))

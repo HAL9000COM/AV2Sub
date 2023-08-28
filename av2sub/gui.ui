@@ -195,6 +195,13 @@
              <item>
               <widget class="QLineEdit" name="lineEdit_transcribe_key"/>
              </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_transcribe_en">
+               <property name="text">
+                <string>English Output</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item>

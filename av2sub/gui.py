@@ -174,6 +174,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         kwargs["out_path"] = self.lineEdit_output.text()
         kwargs["transcribe_api"] = self.comboBox_transcribe.currentText()
         kwargs["transcribe_key"] = self.lineEdit_transcribe_key.text()
+        kwargs["transcribe_en"] = self.checkBox_transcribe_en.isChecked()
         kwargs["translate_api"] = self.comboBox_translate.currentText()
         kwargs["translate_key"] = self.lineEdit_translate_key.text()
         kwargs["max_lines"] = self.spinBox_max_lines.value()
@@ -269,6 +270,7 @@ class Worker(QObject):
         self.target_lang = kwargs.get("target_lang", "ZH")
         self.save_original = kwargs.get("save_original", False)
         self.clear_cache = kwargs.get("clear_cache", True)
+        self.transcribe_en = kwargs.get("transcribe_en", False)
 
     def run(self):
         try:
@@ -280,6 +282,7 @@ class Worker(QObject):
                 srt_path=self.out_path,
                 api=self.transcribe_api,
                 api_key=self.transcribe_key,
+                en=self.transcribe_en,
             )
             if self.target_lang == "None":
                 self.progress.emit("Finish!")
