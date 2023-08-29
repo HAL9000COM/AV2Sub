@@ -32,53 +32,88 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string>Audio/Video Path</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="lineEdit_av"/>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_av_browse">
-               <property name="text">
-                <string>Browse</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBox_batch">
-               <property name="text">
-                <string>batch</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Output Path</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="lineEdit_output"/>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_out_browse">
-               <property name="text">
-                <string>Browse</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+            <widget class="QTabWidget" name="tabWidget_input">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="tab_av">
+              <attribute name="title">
+               <string>Audio/Video</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QLabel" name="label">
+                   <property name="text">
+                    <string>Audio/Video Path</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_av"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_av_browse">
+                   <property name="text">
+                    <string>Browse</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                 <item>
+                  <widget class="QLabel" name="label_2">
+                   <property name="text">
+                    <string>Output Path</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_output"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_out_browse">
+                   <property name="text">
+                    <string>Browse</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_subtitle">
+              <attribute name="title">
+               <string>Subtitile</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <item>
+                  <widget class="QLabel" name="label_8">
+                   <property name="text">
+                    <string>Subtitle Path</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_sub_in"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_sub_in_browse">
+                   <property name="text">
+                    <string>Browse</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -163,7 +198,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tab_settings">
        <attribute name="title">
         <string>Settings</string>
        </attribute>
@@ -195,6 +230,13 @@
              <item>
               <widget class="QLineEdit" name="lineEdit_transcribe_key"/>
              </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_transcribe_en">
+               <property name="text">
+                <string>English Output</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item>
@@ -215,7 +257,12 @@
                </item>
                <item>
                 <property name="text">
-                 <string>Deepl Pro</string>
+                 <string>DeepL Pro</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Google</string>
                 </property>
                </item>
               </widget>

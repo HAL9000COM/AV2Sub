@@ -14,10 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # %%
-import openai
+
 import os
-import ffmpeg
-import pysrt
+
 import requests
 import urllib.request
 
@@ -26,6 +25,7 @@ import urllib.request
 def video2audio(video_path: str, audio_path=None, bitrate="128k"):
     if audio_path is None:
         audio_path = video_path.split(".")[0] + ".webm"
+    import ffmpeg
 
     stream = ffmpeg.input(video_path)
     stream = ffmpeg.output(
@@ -43,12 +43,14 @@ def video2audio(video_path: str, audio_path=None, bitrate="128k"):
 
 
 # %%
-def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None):
+def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None, en=False):
     if srt_path is None:
         srt_path = audio_path.split(".")[0] + ".srt"
     # check audio file size
     match api:
         case "OpenAI":
+            import openai
+
             openai.api_key = api_key
             if os.path.getsize(audio_path) > 25 * 1024 * 1024:
                 raise Exception(
@@ -56,9 +58,14 @@ def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None):
                 )
             audio_file = open(audio_path, "rb")
             openai.proxy = urllib.request.getproxies()["https"]
-            transcript = openai.Audio.transcribe(
-                "whisper-1", audio_file, response_format="srt"
-            )
+            if en:
+                transcript = openai.Audio.translate(
+                    "whisper-1", audio_file, response_format="srt"
+                )
+            else:
+                transcript = openai.Audio.transcribe(
+                    "whisper-1", audio_file, response_format="srt"
+                )
             with open(srt_path, "w", encoding="utf-8") as f:
                 f.write(transcript)  # type: ignore
         case _:
@@ -79,13 +86,23 @@ def translate(text: list, target_lang: str, api_key: str, api="DeepL"):
                 data=params,
                 proxies=urllib.request.getproxies(),
             )
+            results = request.json()
+            result_list = []
+            for result in results["translations"]:
+                result_list.append(result["text"])
+            return result_list
+
+        case "Google":
+            import googletrans
+
+            translator = googletrans.Translator()
+            translations = translator.translate(text, dest=target_lang)
+            result_list = []
+            for translation in translations:
+                result_list.append(translation.text)
+            return result_list
         case _:
             raise Exception("Not supported translate API")
-    results = request.json()
-    result_list = []
-    for result in results["translations"]:
-        result_list.append(result["text"])
-    return result_list
 
 
 def translate_sub(
@@ -96,6 +113,8 @@ def translate_sub(
     target_lang="ZH",
     bilingual="Top",
 ):
+    import pysrt
+
     subs = pysrt.open(sub_path)
 
     from itertools import zip_longest

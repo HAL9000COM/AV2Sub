@@ -49,50 +49,80 @@ class Ui_MainWindow(object):
         self.groupBox_3.setObjectName(u"groupBox_3")
         self.verticalLayout_2 = QVBoxLayout(self.groupBox_3)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.tabWidget_input = QTabWidget(self.groupBox_3)
+        self.tabWidget_input.setObjectName(u"tabWidget_input")
+        self.tab_av = QWidget()
+        self.tab_av.setObjectName(u"tab_av")
+        self.verticalLayout_6 = QVBoxLayout(self.tab_av)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.label = QLabel(self.groupBox_3)
+        self.label = QLabel(self.tab_av)
         self.label.setObjectName(u"label")
 
         self.horizontalLayout_4.addWidget(self.label)
 
-        self.lineEdit_av = QLineEdit(self.groupBox_3)
+        self.lineEdit_av = QLineEdit(self.tab_av)
         self.lineEdit_av.setObjectName(u"lineEdit_av")
 
         self.horizontalLayout_4.addWidget(self.lineEdit_av)
 
-        self.pushButton_av_browse = QPushButton(self.groupBox_3)
+        self.pushButton_av_browse = QPushButton(self.tab_av)
         self.pushButton_av_browse.setObjectName(u"pushButton_av_browse")
 
         self.horizontalLayout_4.addWidget(self.pushButton_av_browse)
 
-        self.checkBox_batch = QCheckBox(self.groupBox_3)
-        self.checkBox_batch.setObjectName(u"checkBox_batch")
 
-        self.horizontalLayout_4.addWidget(self.checkBox_batch)
-
-
-        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_4)
 
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.label_2 = QLabel(self.groupBox_3)
+        self.label_2 = QLabel(self.tab_av)
         self.label_2.setObjectName(u"label_2")
 
         self.horizontalLayout_5.addWidget(self.label_2)
 
-        self.lineEdit_output = QLineEdit(self.groupBox_3)
+        self.lineEdit_output = QLineEdit(self.tab_av)
         self.lineEdit_output.setObjectName(u"lineEdit_output")
 
         self.horizontalLayout_5.addWidget(self.lineEdit_output)
 
-        self.pushButton_out_browse = QPushButton(self.groupBox_3)
+        self.pushButton_out_browse = QPushButton(self.tab_av)
         self.pushButton_out_browse.setObjectName(u"pushButton_out_browse")
 
         self.horizontalLayout_5.addWidget(self.pushButton_out_browse)
 
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_5)
+
+        self.tabWidget_input.addTab(self.tab_av, "")
+        self.tab_subtitle = QWidget()
+        self.tab_subtitle.setObjectName(u"tab_subtitle")
+        self.verticalLayout_8 = QVBoxLayout(self.tab_subtitle)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.label_8 = QLabel(self.tab_subtitle)
+        self.label_8.setObjectName(u"label_8")
+
+        self.horizontalLayout.addWidget(self.label_8)
+
+        self.lineEdit_sub_in = QLineEdit(self.tab_subtitle)
+        self.lineEdit_sub_in.setObjectName(u"lineEdit_sub_in")
+
+        self.horizontalLayout.addWidget(self.lineEdit_sub_in)
+
+        self.pushButton_sub_in_browse = QPushButton(self.tab_subtitle)
+        self.pushButton_sub_in_browse.setObjectName(u"pushButton_sub_in_browse")
+
+        self.horizontalLayout.addWidget(self.pushButton_sub_in_browse)
+
+
+        self.verticalLayout_8.addLayout(self.horizontalLayout)
+
+        self.tabWidget_input.addTab(self.tab_subtitle, "")
+
+        self.verticalLayout_2.addWidget(self.tabWidget_input)
 
 
         self.verticalLayout_5.addWidget(self.groupBox_3)
@@ -158,11 +188,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.pushButton_process)
 
         self.tabWidget.addTab(self.tab_main, "")
-        self.tab_2 = QWidget()
-        self.tab_2.setObjectName(u"tab_2")
-        self.verticalLayout_7 = QVBoxLayout(self.tab_2)
+        self.tab_settings = QWidget()
+        self.tab_settings.setObjectName(u"tab_settings")
+        self.verticalLayout_7 = QVBoxLayout(self.tab_settings)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.groupBox = QGroupBox(self.tab_2)
+        self.groupBox = QGroupBox(self.tab_settings)
         self.groupBox.setObjectName(u"groupBox")
         self.verticalLayout = QVBoxLayout(self.groupBox)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -184,6 +214,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.lineEdit_transcribe_key)
 
+        self.checkBox_transcribe_en = QCheckBox(self.groupBox)
+        self.checkBox_transcribe_en.setObjectName(u"checkBox_transcribe_en")
+
+        self.horizontalLayout_6.addWidget(self.checkBox_transcribe_en)
+
 
         self.verticalLayout.addLayout(self.horizontalLayout_6)
 
@@ -195,6 +230,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_7.addWidget(self.label_6)
 
         self.comboBox_translate = QComboBox(self.groupBox)
+        self.comboBox_translate.addItem("")
         self.comboBox_translate.addItem("")
         self.comboBox_translate.addItem("")
         self.comboBox_translate.setObjectName(u"comboBox_translate")
@@ -214,12 +250,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_9 = QHBoxLayout()
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
-        self.label_7 = QLabel(self.tab_2)
+        self.label_7 = QLabel(self.tab_settings)
         self.label_7.setObjectName(u"label_7")
 
         self.horizontalLayout_9.addWidget(self.label_7)
 
-        self.spinBox_max_lines = QSpinBox(self.tab_2)
+        self.spinBox_max_lines = QSpinBox(self.tab_settings)
         self.spinBox_max_lines.setObjectName(u"spinBox_max_lines")
         self.spinBox_max_lines.setMaximum(200)
         self.spinBox_max_lines.setValue(20)
@@ -229,7 +265,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_9)
 
-        self.tabWidget.addTab(self.tab_2, "")
+        self.tabWidget.addTab(self.tab_settings, "")
 
         self.verticalLayout_4.addWidget(self.tabWidget)
 
@@ -251,6 +287,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget.setCurrentIndex(0)
+        self.tabWidget_input.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -265,9 +302,12 @@ class Ui_MainWindow(object):
         self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Files", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Audio/Video Path", None))
         self.pushButton_av_browse.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
-        self.checkBox_batch.setText(QCoreApplication.translate("MainWindow", u"batch", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Output Path", None))
         self.pushButton_out_browse.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
+        self.tabWidget_input.setTabText(self.tabWidget_input.indexOf(self.tab_av), QCoreApplication.translate("MainWindow", u"Audio/Video", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Subtitle Path", None))
+        self.pushButton_sub_in_browse.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
+        self.tabWidget_input.setTabText(self.tabWidget_input.indexOf(self.tab_subtitle), QCoreApplication.translate("MainWindow", u"Subtitile", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Subtitle settings", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Target Language", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Bilingual subtitles", None))
@@ -283,12 +323,14 @@ class Ui_MainWindow(object):
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Transcribe API", None))
         self.comboBox_transcribe.setItemText(0, QCoreApplication.translate("MainWindow", u"OpenAI", None))
 
+        self.checkBox_transcribe_en.setText(QCoreApplication.translate("MainWindow", u"English Output", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Translate API:", None))
         self.comboBox_translate.setItemText(0, QCoreApplication.translate("MainWindow", u"DeepL", None))
-        self.comboBox_translate.setItemText(1, QCoreApplication.translate("MainWindow", u"Deepl Pro", None))
+        self.comboBox_translate.setItemText(1, QCoreApplication.translate("MainWindow", u"DeepL Pro", None))
+        self.comboBox_translate.setItemText(2, QCoreApplication.translate("MainWindow", u"Google", None))
 
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Max lines in one translate request:", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Settings", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_settings), QCoreApplication.translate("MainWindow", u"Settings", None))
         self.menuAbout.setTitle(QCoreApplication.translate("MainWindow", u"About", None))
     # retranslateUi
 

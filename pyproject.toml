@@ -15,6 +15,7 @@ pysrt = "^1.1.2"
 pyside6 = "^6.5.2"
 send2trash = "^1.8.2"
 markdown2 = "^2.4.10"
+googletrans = "3.1.0a0"
 
 
 [tool.poetry.group.dev.dependencies]

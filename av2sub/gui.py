@@ -35,40 +35,12 @@ from send2trash import send2trash
 from markdown2 import markdown
 
 
-lang_dict_deepl = {
-    "None": "None",
-    "Bulgarian-Български език": "BG",
-    "Czech-Čeština": "CS",
-    "Danish-Dansk": "DA",
-    "German-Deutsch": "DE",
-    "Greek-Ελληνικά": "EL",
-    "English (British)": "EN-GB",
-    "English (American)": "EN-US",
-    "Spanish-Español": "ES",
-    "Estonian-Eesti keel": "ET",
-    "Finnish-Suomi": "FI",
-    "French-Français": "FR",
-    "Hungarian-Magyar": "HU",
-    "Italian-Italiano": "IT",
-    "Japanese-日本語": "JA",
-    "Lithuanian-Lietuvių kalba": "LT",
-    "Latvian-Latviešu valoda": "LV",
-    "Dutch-Nederlands": "NL",
-    "Norwegian (Bokmål)-Norsk (Bokmål)": "NB",
-    "Polish-Polski": "PL",
-    "Portuguese-Português": "PT-PT",
-    "Portuguese (Brazilian)-Português (Brasileiro)": "PT-BR",
-    "Romanian-Română": "RO",
-    "Russian-Русский": "RU",
-    "Slovak-Slovenčina": "SK",
-    "Slovenian-Slovenščina": "SL",
-    "Swedish-Svenska": "SV",
-    "Chinese (Simplified)-简体中文": "ZH",
-}
+from constants import lang_dict_deepl, lang_dict_google
 
 lang_dict = {}
 lang_dict["DeepL"] = lang_dict_deepl
 lang_dict["DeepL Pro"] = lang_dict_deepl
+lang_dict["Google"] = lang_dict_google
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -88,20 +60,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_translate.setCurrentIndex(
             self.comboBox_translate.findText(self.config["translate_api"])
         )
-        self.lineEdit_transcribe_key.setText(self.config["transcribe_key"])
-        self.lineEdit_translate_key.setText(self.config["translate_key"])
+        self.lineEdit_transcribe_key.setText(
+            self.config["transcribe_key"][self.config["transcribe_api"]]
+        )
+        self.lineEdit_translate_key.setText(
+            self.config["translate_key"][self.config["translate_api"]]
+        )
         self.spinBox_max_lines.setValue(self.config["max_lines"])
 
-        self.comboBox_transcribe.currentIndexChanged.connect(self.config_changed)
-        self.comboBox_translate.currentIndexChanged.connect(self.config_changed)
+        self.comboBox_transcribe.currentIndexChanged.connect(self.api_changed)
+        self.comboBox_translate.currentIndexChanged.connect(self.api_changed)
         self.comboBox_translate.currentIndexChanged.connect(self.set_lang)
-        self.lineEdit_transcribe_key.textChanged.connect(self.config_changed)
-        self.lineEdit_translate_key.textChanged.connect(self.config_changed)
+
+        self.lineEdit_transcribe_key.textChanged.connect(self.key_changed)
+        self.lineEdit_translate_key.textChanged.connect(self.key_changed)
+
         self.spinBox_max_lines.valueChanged.connect(self.config_changed)
 
         self.pushButton_av_browse.clicked.connect(self.av_browse)
         self.pushButton_out_browse.clicked.connect(self.out_browse)
-        self.checkBox_batch.stateChanged.connect(self.batch_changed)
+        self.pushButton_sub_in_browse.clicked.connect(self.sub_in_browse)
+
+        # self.checkBox_batch.stateChanged.connect(self.batch_changed)
 
         self.set_lang()
         self.pushButton_process.clicked.connect(self.process)
@@ -110,21 +90,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionOpen_Source_Licenses.triggered.connect(self.licenses)
 
     def av_browse(self):
-        if self.checkBox_batch.isChecked():
-            file_path = QFileDialog.getExistingDirectory(
-                self, "Select Video Folder", ""
-            )
-            if file_path:
-                self.lineEdit_av.setText(file_path)
-                self.lineEdit_output.setText(file_path)
-        else:
-            file_path, _ = QFileDialog.getOpenFileName(
-                self, "Select Video File", "", "Video Files (*.*)"
-            )
-            # check if file_path is valid
-            if os.path.isfile(file_path):
-                self.lineEdit_av.setText(file_path)
-                self.lineEdit_output.setText(file_path.split(".")[0] + ".srt")
+        # if self.checkBox_batch.isChecked():
+        #     file_path = QFileDialog.getExistingDirectory(
+        #         self, "Select Video Folder", ""
+        #     )
+        #     if file_path:
+        #         self.lineEdit_av.setText(file_path)
+        #         self.lineEdit_output.setText(file_path)
+        # else:
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Video File", "", "Video Files (*.*)"
+        )
+        # check if file_path is valid
+        if os.path.isfile(file_path):
+            self.lineEdit_av.setText(file_path)
+            self.lineEdit_output.setText(file_path.split(".")[0] + ".srt")
+
+    def sub_in_browse(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Subtitle File", "", "Subtitle Files (*.srt)"
+        )
+        # check if file_path is valid
+        if os.path.isfile(file_path):
+            self.lineEdit_sub_in.setText(file_path)
 
     def out_browse(self):
         file_path, _ = QFileDialog.getSaveFileName(
@@ -134,23 +122,42 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.lineEdit_output.setText(file_path)
 
     def batch_changed(self):
-        if self.checkBox_batch.isChecked():
-            self.lineEdit_output.setEnabled(False)
-            self.pushButton_out_browse.setEnabled(False)
-        else:
-            self.lineEdit_output.setEnabled(True)
-            self.pushButton_out_browse.setEnabled(True)
+        # if self.checkBox_batch.isChecked():
+        #     self.lineEdit_output.setEnabled(False)
+        #     self.pushButton_out_browse.setEnabled(False)
+        # else:
+        self.lineEdit_output.setEnabled(True)
+        self.pushButton_out_browse.setEnabled(True)
 
     def load_config(self):
         with open("config.json", "r") as f:
             self.config = json.load(f)
 
     def config_changed(self):
+        self.config["max_lines"] = self.spinBox_max_lines.value()
+
+    def api_changed(self):
         self.config["transcribe_api"] = self.comboBox_transcribe.currentText()
         self.config["translate_api"] = self.comboBox_translate.currentText()
-        self.config["transcribe_key"] = self.lineEdit_transcribe_key.text()
-        self.config["translate_key"] = self.lineEdit_translate_key.text()
-        self.config["max_lines"] = self.spinBox_max_lines.value()
+        self.lineEdit_transcribe_key.setText(
+            self.config["transcribe_key"].get(self.config["transcribe_api"], "")
+        )
+        self.lineEdit_translate_key.setText(
+            self.config["translate_key"].get(self.config["translate_api"], "")
+        )
+        if self.config["translate_api"] == "Google":
+            self.lineEdit_translate_key.setEnabled(False)
+        else:
+            self.lineEdit_translate_key.setEnabled(True)
+        self.set_lang()
+
+    def key_changed(self):
+        self.config["transcribe_key"][
+            self.config["transcribe_api"]
+        ] = self.lineEdit_transcribe_key.text()
+        self.config["translate_key"][
+            self.config["translate_api"]
+        ] = self.lineEdit_translate_key.text()
 
     def set_lang(self):
         self.comboBox_target_lang.clear()
@@ -160,8 +167,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def init_config(self):
         self.config["transcribe_api"] = "OpenAI"
         self.config["translate_api"] = "DeepL"
-        self.config["transcribe_key"] = ""
-        self.config["translate_key"] = ""
+        self.config["transcribe_key"] = {}
+        self.config["transcribe_key"]["OpenAI"] = ""
+        self.config["translate_key"] = {}
+        self.config["translate_key"]["DeepL"] = ""
         self.config["max_lines"] = 20
 
     def save_config(self):
@@ -169,11 +178,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             json.dump(self.config, f, indent=4)
 
     def process(self):
+        match self.tabWidget_input.currentIndex():
+            case 0:
+                mode = "av"
+            case 1:
+                mode = "subtitle"
+            case _:
+                raise
         kwargs = {}
+        kwargs["mode"] = mode
         kwargs["video_path"] = self.lineEdit_av.text()
+        kwargs["sub_in_path"] = self.lineEdit_sub_in.text()
         kwargs["out_path"] = self.lineEdit_output.text()
         kwargs["transcribe_api"] = self.comboBox_transcribe.currentText()
         kwargs["transcribe_key"] = self.lineEdit_transcribe_key.text()
+        kwargs["transcribe_en"] = self.checkBox_transcribe_en.isChecked()
         kwargs["translate_api"] = self.comboBox_translate.currentText()
         kwargs["translate_key"] = self.lineEdit_translate_key.text()
         kwargs["max_lines"] = self.spinBox_max_lines.value()
@@ -259,7 +278,9 @@ class Worker(QObject):
 
     def __init__(self, **kwargs):
         super().__init__()
+        self.mode = kwargs.get("mode", "av")
         self.video_path = kwargs.get("video_path", "")
+        self.sub_in_path = kwargs.get("sub_in_path", "")
         self.out_path = kwargs.get("out_path", "")
         self.transcribe_api = kwargs.get("transcribe_api", "OpenAI")
         self.transcribe_key = kwargs.get("transcribe_key", "")
@@ -269,8 +290,20 @@ class Worker(QObject):
         self.target_lang = kwargs.get("target_lang", "ZH")
         self.save_original = kwargs.get("save_original", False)
         self.clear_cache = kwargs.get("clear_cache", True)
+        self.transcribe_en = kwargs.get("transcribe_en", False)
 
     def run(self):
+        try:
+            match self.mode:
+                case "av":
+                    self.av_process()
+                case "subtitle":
+                    self.sub_process()
+        except Exception as e:
+            self.progress.emit(str(e))
+            self.finished.emit()
+
+    def av_process(self):
         try:
             self.progress.emit("Start FFmpeg...")
             audio_path = video2audio(self.video_path)
@@ -280,6 +313,7 @@ class Worker(QObject):
                 srt_path=self.out_path,
                 api=self.transcribe_api,
                 api_key=self.transcribe_key,
+                en=self.transcribe_en,
             )
             if self.target_lang == "None":
                 self.progress.emit("Finish!")
@@ -302,10 +336,34 @@ class Worker(QObject):
                 audio_path = audio_path.replace("/", "\\")  # fix for windows
                 send2trash(audio_path)
             self.progress.emit("Finish!")
-            self.finished.emit()
         except Exception as e:
             self.progress.emit(str(e))
-            self.finished.emit()
+        return
+
+    def sub_process(self):
+        try:
+            srt_path = self.sub_in_path
+            self.out_path = self.sub_in_path
+            if self.target_lang == "None":
+                self.progress.emit("Finish!")
+                self.finished.emit()
+                return
+            if self.save_original:
+                # copy and rename original srt
+                path = self.out_path.split(".")[0] + "_original.srt"
+                shutil.copyfile(srt_path, path)
+            self.progress.emit("Start Translating...")
+            translate_sub(
+                sub_path=srt_path,
+                api=self.translate_api,
+                api_key=self.translate_key,
+                max_lines=self.max_lines,
+                target_lang=self.target_lang,
+            )
+            self.progress.emit("Finish!")
+        except Exception as e:
+            self.progress.emit(str(e))
+        return
 
 
 if __name__ == "__main__":
