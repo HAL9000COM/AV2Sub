@@ -14,10 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # %%
-import openai
+
 import os
-import ffmpeg
-import pysrt
+
 import requests
 import urllib.request
 
@@ -26,6 +25,7 @@ import urllib.request
 def video2audio(video_path: str, audio_path=None, bitrate="128k"):
     if audio_path is None:
         audio_path = video_path.split(".")[0] + ".webm"
+    import ffmpeg
 
     stream = ffmpeg.input(video_path)
     stream = ffmpeg.output(
@@ -49,6 +49,8 @@ def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None, en=Fal
     # check audio file size
     match api:
         case "OpenAI":
+            import openai
+
             openai.api_key = api_key
             if os.path.getsize(audio_path) > 25 * 1024 * 1024:
                 raise Exception(
@@ -101,6 +103,8 @@ def translate_sub(
     target_lang="ZH",
     bilingual="Top",
 ):
+    import pysrt
+
     subs = pysrt.open(sub_path)
 
     from itertools import zip_longest
