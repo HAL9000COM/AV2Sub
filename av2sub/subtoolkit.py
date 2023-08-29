@@ -86,13 +86,23 @@ def translate(text: list, target_lang: str, api_key: str, api="DeepL"):
                 data=params,
                 proxies=urllib.request.getproxies(),
             )
+            results = request.json()
+            result_list = []
+            for result in results["translations"]:
+                result_list.append(result["text"])
+            return result_list
+
+        case "Google":
+            import googletrans
+
+            translator = googletrans.Translator()
+            translations = translator.translate(text, dest=target_lang)
+            result_list = []
+            for translation in translations:
+                result_list.append(translation.text)
+            return result_list
         case _:
             raise Exception("Not supported translate API")
-    results = request.json()
-    result_list = []
-    for result in results["translations"]:
-        result_list.append(result["text"])
-    return result_list
 
 
 def translate_sub(

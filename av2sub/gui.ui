@@ -34,7 +34,7 @@
            <item>
             <widget class="QTabWidget" name="tabWidget_input">
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab_av">
               <attribute name="title">
@@ -257,7 +257,12 @@
                </item>
                <item>
                 <property name="text">
-                 <string>Deepl Pro</string>
+                 <string>DeepL Pro</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Google</string>
                 </property>
                </item>
               </widget>

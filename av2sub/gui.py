@@ -35,40 +35,12 @@ from send2trash import send2trash
 from markdown2 import markdown
 
 
-lang_dict_deepl = {
-    "None": "None",
-    "Bulgarian-Български език": "BG",
-    "Czech-Čeština": "CS",
-    "Danish-Dansk": "DA",
-    "German-Deutsch": "DE",
-    "Greek-Ελληνικά": "EL",
-    "English (British)": "EN-GB",
-    "English (American)": "EN-US",
-    "Spanish-Español": "ES",
-    "Estonian-Eesti keel": "ET",
-    "Finnish-Suomi": "FI",
-    "French-Français": "FR",
-    "Hungarian-Magyar": "HU",
-    "Italian-Italiano": "IT",
-    "Japanese-日本語": "JA",
-    "Lithuanian-Lietuvių kalba": "LT",
-    "Latvian-Latviešu valoda": "LV",
-    "Dutch-Nederlands": "NL",
-    "Norwegian (Bokmål)-Norsk (Bokmål)": "NB",
-    "Polish-Polski": "PL",
-    "Portuguese-Português": "PT-PT",
-    "Portuguese (Brazilian)-Português (Brasileiro)": "PT-BR",
-    "Romanian-Română": "RO",
-    "Russian-Русский": "RU",
-    "Slovak-Slovenčina": "SK",
-    "Slovenian-Slovenščina": "SL",
-    "Swedish-Svenska": "SV",
-    "Chinese (Simplified)-简体中文": "ZH",
-}
+from constants import lang_dict_deepl, lang_dict_google
 
 lang_dict = {}
 lang_dict["DeepL"] = lang_dict_deepl
 lang_dict["DeepL Pro"] = lang_dict_deepl
+lang_dict["Google"] = lang_dict_google
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -88,15 +60,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_translate.setCurrentIndex(
             self.comboBox_translate.findText(self.config["translate_api"])
         )
-        self.lineEdit_transcribe_key.setText(self.config["transcribe_key"])
-        self.lineEdit_translate_key.setText(self.config["translate_key"])
+        self.lineEdit_transcribe_key.setText(
+            self.config["transcribe_key"][self.config["transcribe_api"]]
+        )
+        self.lineEdit_translate_key.setText(
+            self.config["translate_key"][self.config["translate_api"]]
+        )
         self.spinBox_max_lines.setValue(self.config["max_lines"])
 
-        self.comboBox_transcribe.currentIndexChanged.connect(self.config_changed)
-        self.comboBox_translate.currentIndexChanged.connect(self.config_changed)
+        self.comboBox_transcribe.currentIndexChanged.connect(self.api_changed)
+        self.comboBox_translate.currentIndexChanged.connect(self.api_changed)
         self.comboBox_translate.currentIndexChanged.connect(self.set_lang)
-        self.lineEdit_transcribe_key.textChanged.connect(self.config_changed)
-        self.lineEdit_translate_key.textChanged.connect(self.config_changed)
+
+        self.lineEdit_transcribe_key.textChanged.connect(self.key_changed)
+        self.lineEdit_translate_key.textChanged.connect(self.key_changed)
+
         self.spinBox_max_lines.valueChanged.connect(self.config_changed)
 
         self.pushButton_av_browse.clicked.connect(self.av_browse)
@@ -156,11 +134,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.config = json.load(f)
 
     def config_changed(self):
+        self.config["max_lines"] = self.spinBox_max_lines.value()
+
+    def api_changed(self):
         self.config["transcribe_api"] = self.comboBox_transcribe.currentText()
         self.config["translate_api"] = self.comboBox_translate.currentText()
-        self.config["transcribe_key"] = self.lineEdit_transcribe_key.text()
-        self.config["translate_key"] = self.lineEdit_translate_key.text()
-        self.config["max_lines"] = self.spinBox_max_lines.value()
+        self.lineEdit_transcribe_key.setText(
+            self.config["transcribe_key"].get(self.config["transcribe_api"], "")
+        )
+        self.lineEdit_translate_key.setText(
+            self.config["translate_key"].get(self.config["translate_api"], "")
+        )
+        if self.config["translate_api"] == "Google":
+            self.lineEdit_translate_key.setEnabled(False)
+        else:
+            self.lineEdit_translate_key.setEnabled(True)
+        self.set_lang()
+
+    def key_changed(self):
+        self.config["transcribe_key"][
+            self.config["transcribe_api"]
+        ] = self.lineEdit_transcribe_key.text()
+        self.config["translate_key"][
+            self.config["translate_api"]
+        ] = self.lineEdit_translate_key.text()
 
     def set_lang(self):
         self.comboBox_target_lang.clear()
@@ -170,8 +167,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def init_config(self):
         self.config["transcribe_api"] = "OpenAI"
         self.config["translate_api"] = "DeepL"
-        self.config["transcribe_key"] = ""
-        self.config["translate_key"] = ""
+        self.config["transcribe_key"] = {}
+        self.config["transcribe_key"]["OpenAI"] = ""
+        self.config["translate_key"] = {}
+        self.config["translate_key"]["DeepL"] = ""
         self.config["max_lines"] = 20
 
     def save_config(self):

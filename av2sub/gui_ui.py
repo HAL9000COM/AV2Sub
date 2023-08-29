@@ -232,6 +232,7 @@ class Ui_MainWindow(object):
         self.comboBox_translate = QComboBox(self.groupBox)
         self.comboBox_translate.addItem("")
         self.comboBox_translate.addItem("")
+        self.comboBox_translate.addItem("")
         self.comboBox_translate.setObjectName(u"comboBox_translate")
 
         self.horizontalLayout_7.addWidget(self.comboBox_translate)
@@ -286,7 +287,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget.setCurrentIndex(0)
-        self.tabWidget_input.setCurrentIndex(1)
+        self.tabWidget_input.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -325,7 +326,8 @@ class Ui_MainWindow(object):
         self.checkBox_transcribe_en.setText(QCoreApplication.translate("MainWindow", u"English Output", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Translate API:", None))
         self.comboBox_translate.setItemText(0, QCoreApplication.translate("MainWindow", u"DeepL", None))
-        self.comboBox_translate.setItemText(1, QCoreApplication.translate("MainWindow", u"Deepl Pro", None))
+        self.comboBox_translate.setItemText(1, QCoreApplication.translate("MainWindow", u"DeepL Pro", None))
+        self.comboBox_translate.setItemText(2, QCoreApplication.translate("MainWindow", u"Google", None))
 
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Max lines in one translate request:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_settings), QCoreApplication.translate("MainWindow", u"Settings", None))
