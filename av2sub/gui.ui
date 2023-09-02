@@ -225,6 +225,11 @@
                  <string>OpenAI</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>AutoSub-WebAPI</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>
