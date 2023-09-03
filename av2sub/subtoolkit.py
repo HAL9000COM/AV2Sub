@@ -43,7 +43,13 @@ def video2audio(video_path: str, audio_path=None, bitrate="128k"):
 
 
 # %%
-def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None, en=False):
+def audio2srt(
+    audio_path: str,
+    api_key: str,
+    api="OpenAI",
+    srt_path=None,
+    en=False,
+):
     if srt_path is None:
         srt_path = audio_path.split(".")[0] + ".srt"
     # check audio file size
@@ -68,6 +74,40 @@ def audio2srt(audio_path: str, api_key: str, api="OpenAI", srt_path=None, en=Fal
                 )
             with open(srt_path, "w", encoding="utf-8") as f:
                 f.write(transcript)  # type: ignore
+        case "AutoSub-WebAPI":
+            # Define the API endpoint URL
+            url = api_key
+            headers = {}
+            audio_name = os.path.basename(audio_path)
+            file = {
+                "file": (audio_name, open(audio_path, "rb"), "audio/webm"),
+            }
+            settings = {"format": "srt"}
+            response = requests.post(url, headers=headers, files=file, data=settings)
+            if response.status_code == 200:
+                with open(srt_path, "w", encoding="utf-8") as f:
+                    f.write(response.text)  # type: ignore
+            else:
+                raise Exception(
+                    f"Request failed with status code {response.status_code}:"
+                )
+        case "Whisper-timestamped-WebAPI":
+            # Define the API endpoint URL
+            url = api_key
+            headers = {}
+            audio_name = os.path.basename(audio_path)
+            file = {
+                "file": (audio_name, open(audio_path, "rb"), "audio/webm"),
+            }
+            settings = {"format": "srt"}
+            response = requests.post(url, headers=headers, files=file, data=settings)
+            if response.status_code == 200:
+                with open(srt_path, "w", encoding="utf-8") as f:
+                    f.write(response.text)  # type: ignore
+            else:
+                raise Exception(
+                    f"Request failed with status code {response.status_code}:"
+                )
         case _:
             raise Exception("Not supported transcribe API")
     return srt_path
@@ -78,7 +118,9 @@ def translate(text: list, target_lang: str, api_key: str, api="DeepL"):
     match api:
         case "DeepL":
             request = requests.post(
-                "https://api-free.deepl.com/v2/translate", data=params
+                "https://api-free.deepl.com/v2/translate",
+                data=params,
+                proxies=urllib.request.getproxies(),
             )
         case "DeepLPro":
             request = requests.post(

@@ -54,6 +54,84 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.init_config()
             self.save_config()
 
+        self.read_config()
+
+        self.comboBox_transcribe.currentIndexChanged.connect(self.api_changed)
+        self.comboBox_translate.currentIndexChanged.connect(self.api_changed)
+        self.comboBox_translate.currentIndexChanged.connect(self.set_lang)
+        self.lineEdit_transcribe_key.textChanged.connect(self.key_changed)
+        self.lineEdit_translate_key.textChanged.connect(self.key_changed)
+        self.spinBox_max_lines.valueChanged.connect(self.config_changed)
+        self.pushButton_av_browse.clicked.connect(self.av_browse)
+        self.pushButton_out_browse.clicked.connect(self.out_browse)
+        self.pushButton_sub_in_browse.clicked.connect(self.sub_in_browse)
+
+        # self.checkBox_batch.stateChanged.connect(self.batch_changed)
+        self.pushButton_process.clicked.connect(self.process)
+
+        self.actionAbout.triggered.connect(self.about)
+        self.actionOpen_Source_Licenses.triggered.connect(self.licenses)
+
+    def load_config(self):
+        with open("config.json", "r") as f:
+            self.config = json.load(f)
+
+    def config_changed(self):
+        self.config["max_lines"] = self.spinBox_max_lines.value()
+
+    def api_changed(self):
+        self.config["transcribe_api"] = self.comboBox_transcribe.currentText()
+        self.config["translate_api"] = self.comboBox_translate.currentText()
+        # check if key exists
+        if self.config["transcribe_api"] not in self.config["transcribe_key"].keys():
+            self.config["transcribe_key"][self.config["transcribe_api"]] = ""
+        if self.config["translate_api"] not in self.config["translate_key"].keys():
+            self.config["translate_key"][self.config["translate_api"]] = ""
+        self.lineEdit_transcribe_key.setText(
+            self.config["transcribe_key"].get(self.config["transcribe_api"], "")
+        )
+        self.lineEdit_translate_key.setText(
+            self.config["translate_key"].get(self.config["translate_api"], "")
+        )
+        if self.config["transcribe_api"] == "OpenAI":
+            self.checkBox_transcribe_en.show()
+        else:
+            self.checkBox_transcribe_en.hide()
+
+        if self.config["translate_api"] == "Google":
+            self.lineEdit_translate_key.setEnabled(False)
+        else:
+            self.lineEdit_translate_key.setEnabled(True)
+
+        self.set_lang()
+
+    def key_changed(self):
+        self.config["transcribe_key"][
+            self.config["transcribe_api"]
+        ] = self.lineEdit_transcribe_key.text()
+        self.config["translate_key"][
+            self.config["translate_api"]
+        ] = self.lineEdit_translate_key.text()
+
+    def set_lang(self):
+        self.comboBox_target_lang.clear()
+        for lang in lang_dict[self.config["translate_api"]].keys():
+            self.comboBox_target_lang.addItem(lang)
+
+    def init_config(self):
+        self.config["transcribe_api"] = "OpenAI"
+        self.config["translate_api"] = "DeepL"
+        self.config["transcribe_key"] = {}
+        self.config["transcribe_key"]["OpenAI"] = ""
+        self.config["translate_key"] = {}
+        self.config["translate_key"]["DeepL"] = ""
+        self.config["max_lines"] = 20
+
+    def save_config(self):
+        with open("config.json", "w") as f:
+            json.dump(self.config, f, indent=4)
+
+    def read_config(self):
         self.comboBox_transcribe.setCurrentIndex(
             self.comboBox_transcribe.findText(self.config["transcribe_api"])
         )
@@ -67,27 +145,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.config["translate_key"][self.config["translate_api"]]
         )
         self.spinBox_max_lines.setValue(self.config["max_lines"])
-
-        self.comboBox_transcribe.currentIndexChanged.connect(self.api_changed)
-        self.comboBox_translate.currentIndexChanged.connect(self.api_changed)
-        self.comboBox_translate.currentIndexChanged.connect(self.set_lang)
-
-        self.lineEdit_transcribe_key.textChanged.connect(self.key_changed)
-        self.lineEdit_translate_key.textChanged.connect(self.key_changed)
-
-        self.spinBox_max_lines.valueChanged.connect(self.config_changed)
-
-        self.pushButton_av_browse.clicked.connect(self.av_browse)
-        self.pushButton_out_browse.clicked.connect(self.out_browse)
-        self.pushButton_sub_in_browse.clicked.connect(self.sub_in_browse)
-
-        # self.checkBox_batch.stateChanged.connect(self.batch_changed)
-
         self.set_lang()
-        self.pushButton_process.clicked.connect(self.process)
-
-        self.actionAbout.triggered.connect(self.about)
-        self.actionOpen_Source_Licenses.triggered.connect(self.licenses)
 
     def av_browse(self):
         # if self.checkBox_batch.isChecked():
@@ -129,54 +187,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.lineEdit_output.setEnabled(True)
         self.pushButton_out_browse.setEnabled(True)
 
-    def load_config(self):
-        with open("config.json", "r") as f:
-            self.config = json.load(f)
-
-    def config_changed(self):
-        self.config["max_lines"] = self.spinBox_max_lines.value()
-
-    def api_changed(self):
-        self.config["transcribe_api"] = self.comboBox_transcribe.currentText()
-        self.config["translate_api"] = self.comboBox_translate.currentText()
-        self.lineEdit_transcribe_key.setText(
-            self.config["transcribe_key"].get(self.config["transcribe_api"], "")
-        )
-        self.lineEdit_translate_key.setText(
-            self.config["translate_key"].get(self.config["translate_api"], "")
-        )
-        if self.config["translate_api"] == "Google":
-            self.lineEdit_translate_key.setEnabled(False)
-        else:
-            self.lineEdit_translate_key.setEnabled(True)
-        self.set_lang()
-
-    def key_changed(self):
-        self.config["transcribe_key"][
-            self.config["transcribe_api"]
-        ] = self.lineEdit_transcribe_key.text()
-        self.config["translate_key"][
-            self.config["translate_api"]
-        ] = self.lineEdit_translate_key.text()
-
-    def set_lang(self):
-        self.comboBox_target_lang.clear()
-        for lang in lang_dict[self.config["translate_api"]].keys():
-            self.comboBox_target_lang.addItem(lang)
-
-    def init_config(self):
-        self.config["transcribe_api"] = "OpenAI"
-        self.config["translate_api"] = "DeepL"
-        self.config["transcribe_key"] = {}
-        self.config["transcribe_key"]["OpenAI"] = ""
-        self.config["translate_key"] = {}
-        self.config["translate_key"]["DeepL"] = ""
-        self.config["max_lines"] = 20
-
-    def save_config(self):
-        with open("config.json", "w") as f:
-            json.dump(self.config, f, indent=4)
-
     def process(self):
         match self.tabWidget_input.currentIndex():
             case 0:
@@ -185,6 +195,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 mode = "subtitle"
             case _:
                 raise
+
         kwargs = {}
         kwargs["mode"] = mode
         kwargs["video_path"] = self.lineEdit_av.text()
