@@ -17,7 +17,7 @@ Audio/Video to Subtitle converter with translation.
 
 For OpenAI and DeepL API, enter your API key.
 
-For [AutoSub-WebAPI](https://github.com/HAL9000COM/AutoSub-WebAPI), set up the container and enter the URL. e.g. <http://localhost:5000/transcribe>
+For [AutoSub-WebAPI](https://github.com/HAL9000COM/AutoSub-WebAPI) and [whisper-timestamped-WebAPI](https://github.com/HAL9000COM/whisper-timestamped-WebAPI), set up the container and enter the URL. e.g. <http://localhost:5000/transcribe>
 
 Select the audio/video file, set target language and style of subtitles, then click `Process`.
 
@@ -25,8 +25,8 @@ Select the audio/video file, set target language and style of subtitles, then cl
 
 * [ ] Audio splitting
 * [ ] Google APIs
-* [ ] Better timestamp accuracy with other model
-* [ ] Translation
+* [x] Better timestamp accuracy with other model with whisper-timestamped
+* [ ] Contextual translation
 * [ ] GUI translation
 
 ## GUI compile

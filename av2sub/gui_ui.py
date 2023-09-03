@@ -206,6 +206,7 @@ class Ui_MainWindow(object):
         self.comboBox_transcribe = QComboBox(self.groupBox)
         self.comboBox_transcribe.addItem("")
         self.comboBox_transcribe.addItem("")
+        self.comboBox_transcribe.addItem("")
         self.comboBox_transcribe.setObjectName(u"comboBox_transcribe")
 
         self.horizontalLayout_6.addWidget(self.comboBox_transcribe)
@@ -324,6 +325,7 @@ class Ui_MainWindow(object):
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Transcribe API", None))
         self.comboBox_transcribe.setItemText(0, QCoreApplication.translate("MainWindow", u"OpenAI", None))
         self.comboBox_transcribe.setItemText(1, QCoreApplication.translate("MainWindow", u"AutoSub-WebAPI", None))
+        self.comboBox_transcribe.setItemText(2, QCoreApplication.translate("MainWindow", u"Whisper-timestamped-WebAPI", None))
 
         self.checkBox_transcribe_en.setText(QCoreApplication.translate("MainWindow", u"English Output", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Translate API:", None))

@@ -91,6 +91,23 @@ def audio2srt(
                 raise Exception(
                     f"Request failed with status code {response.status_code}:"
                 )
+        case "Whisper-timestamped-WebAPI":
+            # Define the API endpoint URL
+            url = api_key
+            headers = {}
+            audio_name = os.path.basename(audio_path)
+            file = {
+                "file": (audio_name, open(audio_path, "rb"), "audio/webm"),
+            }
+            settings = {"format": "srt"}
+            response = requests.post(url, headers=headers, files=file, data=settings)
+            if response.status_code == 200:
+                with open(srt_path, "w", encoding="utf-8") as f:
+                    f.write(response.text)  # type: ignore
+            else:
+                raise Exception(
+                    f"Request failed with status code {response.status_code}:"
+                )
         case _:
             raise Exception("Not supported transcribe API")
     return srt_path
