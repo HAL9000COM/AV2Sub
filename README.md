@@ -6,7 +6,7 @@ Audio/Video to Subtitle converter with translation.
 
 * Transcribe audio/video to srt
 * Translate srt to bilingual srt
-* Transcribe API: OpenAI Whisper, DeepSpeech&Coqui STT via [AutoSub-WebAPI](<https://github.com/HAL9000COM/AutoSub-WebAPI>)
+* Transcribe API: Whisper(OpenAI,[whisper-timestamped-WebAPI](https://github.com/HAL9000COM/whisper-timestamped-WebAPI)), DeepSpeech&Coqui STT via [AutoSub-WebAPI](<https://github.com/HAL9000COM/AutoSub-WebAPI>)
 * Translate API: DeepL, DeepL Pro, Google
 
 ## Requirements
@@ -15,11 +15,21 @@ Audio/Video to Subtitle converter with translation.
 
 ## Usage
 
-For OpenAI and DeepL API, enter your API key.
+For OpenAI and DeepL API, enter your API key in Settings tab.
 
 For [AutoSub-WebAPI](https://github.com/HAL9000COM/AutoSub-WebAPI) and [whisper-timestamped-WebAPI](https://github.com/HAL9000COM/whisper-timestamped-WebAPI), set up the container and enter the URL. e.g. <http://localhost:5000/transcribe>
 
 Select the audio/video file, set target language and style of subtitles, then click `Process`.
+
+## For dev
+
+### Install
+
+    poetry install
+
+### Run
+
+    python .\av2sub\gui.py
 
 ## TODO
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "AV2Sub"
-version = "0.1.0"
+version = "0.1.2"
 description = "Audio/Video to Subtitle converter with translation."
 license="GPL-3.0-or-later"
 authors = ["HAL9000COM <f1226942353@icloud.com>"]
