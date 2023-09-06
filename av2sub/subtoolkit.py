@@ -122,6 +122,12 @@ def translate(text: list, target_lang: str, api_key: str, api="DeepL"):
                 data=params,
                 proxies=urllib.request.getproxies(),
             )
+            results = request.json()
+            result_list = []
+            for result in results["translations"]:
+                result_list.append(result["text"])
+            return result_list
+
         case "DeepLPro":
             request = requests.post(
                 "https://api.deepl.com/v2/translate",
